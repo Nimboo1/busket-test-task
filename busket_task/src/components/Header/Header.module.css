@@ -1,0 +1,11 @@
+.header {
+  height: 60px;
+  border: 1px solid black;
+}
+
+.nav {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
