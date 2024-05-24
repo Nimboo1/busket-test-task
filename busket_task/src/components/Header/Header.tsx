@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { Flex } from 'antd';
 
 import SelectComponent from '../Select/Select';
 
@@ -7,15 +6,24 @@ import { paths } from '../../paths';
 
 import styles from './Header.module.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  userName: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ userName }) => {
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
         {Object.entries(paths).map((el) => {
-          return <NavLink to={el[1]}>{el[0]}</NavLink>;
+          return (
+            <NavLink to={el[1]} key={el[1]}>
+              {el[0]}
+            </NavLink>
+          );
         })}
         <SelectComponent />
       </nav>
+      <div className={styles.title}>{userName}</div>
     </header>
   );
 };

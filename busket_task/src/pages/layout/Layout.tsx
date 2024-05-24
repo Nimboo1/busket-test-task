@@ -2,10 +2,14 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '../../components/Header/Header';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  headerTitle: string;
+}
+
+const Layout: React.FC<LayoutProps> = ({ headerTitle }) => {
   return (
     <>
-      <Header />
+      <Header userName={headerTitle} />
       <Outlet />
     </>
   );
