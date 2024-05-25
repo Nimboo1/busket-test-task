@@ -1,37 +1,45 @@
 import { useState, useEffect, useContext } from 'react';
-import { Col, Row, Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
-import UsedGuid from '../../context/Usedguid';
-import { getProducts, getSummary, clearBusket } from '../../api/HawkingBrosApi';
+import ProductTable from '../../components/ProductTable/ProductTable';
 
-import { IProduct } from '../../interfaces/Interfaces';
+import UserGuid from '../../context/Userguid';
+import {
+  getProducts,
+  getSummary,
+  clearBusket,
+  deleteProduct,
+  quantityDec,
+  quantityInc,
+} from '../../api/HawkingBrosApi';
+
+import type { IProduct } from '../../interfaces/Interfaces';
 
 import styles from './Busket.module.css';
 
 const Busket: React.FC = () => {
-  const usedGuid = useContext(UsedGuid);
+  const userGuid = useContext(UserGuid);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
-    if (usedGuid) {
+    if (userGuid) {
       getProducts()
         .then((data) => {
           setProducts(data);
-          console.log(data);
         })
         .catch(() => {
           alert('Ошибка получения данных');
         });
     }
-  }, [usedGuid]);
+  }, [userGuid]);
 
   useEffect(() => {
-    if (usedGuid) {
+    if (userGuid) {
       getSummary()
         .then((data) => {
+          console.log(data);
           setTotalPrice(data);
         })
         .catch(() => {
@@ -43,21 +51,12 @@ const Busket: React.FC = () => {
   return (
     <div>
       <Button onClick={clear}>Очистить корзину</Button>
-      {products.map((el) => {
-        return (
-          <Row key={el.Id}>
-            <Col flex='auto'>{el.Name}</Col>
-            <Col span={4}>{el.Quantity}</Col>
-            <Col span={4}>{el.Price}</Col>
-            <Col span={4}>
-              <img className={styles.img} src={'data:image/png;base64,' + el.Images[0].Image} />
-            </Col>
-            <Col span={4}>
-              <Button shape='circle' icon={<DeleteOutlined />} />
-            </Col>
-          </Row>
-        );
-      })}
+      <ProductTable
+        products={products}
+        productDelete={handleDelete}
+        productDec={handleDec}
+        productInc={handleInc}
+      />
       <span>{`Общая сумма: ${totalPrice}`}</span>
       <Button>Оформить заказ</Button>
     </div>
@@ -70,6 +69,54 @@ const Busket: React.FC = () => {
       })
       .catch(() => {
         alert('Ошибка удаления корзины');
+      });
+  }
+
+  function handleDelete(id: number, userGuid: string | null) {
+    deleteProduct(id, userGuid)
+      .then(() => {
+        setProducts(products.filter((el) => el.Id !== id));
+      })
+      .catch(() => {
+        alert('Ошибка получения данных');
+      });
+  }
+
+  function handleInc(id: number, userGuid: string | null) {
+    quantityInc(id, userGuid)
+      .then(() => {
+        setProducts(
+          products.map((el) => {
+            if (el.Id === id) {
+              return { ...el, Quantity: ++el.Quantity };
+            } else {
+              return el;
+            }
+          })
+        );
+      })
+      .catch(() => {
+        alert('Ошибка получения данных');
+      });
+  }
+
+  function handleDec(id: number, userGuid: string | null) {
+    quantityDec(id, userGuid)
+      .then((data) => {
+        if (data !== 'Bad') {
+          setProducts(
+            products.map((el) => {
+              if (el.Id === id) {
+                return { ...el, Quantity: --el.Quantity };
+              } else {
+                return el;
+              }
+            })
+          );
+        } else alert('Количество товара больше нельзя уменьшить');
+      })
+      .catch(() => {
+        alert('Ошибка получения данных');
       });
   }
 };

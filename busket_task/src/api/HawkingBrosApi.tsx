@@ -85,3 +85,54 @@ export async function clearBusket(): Promise<string> {
     throw new Error();
   }
 }
+
+export async function deleteProduct(ProductId: number, UserGuid: string | null): Promise<string> {
+  try {
+    const response = await fetch(`${baseUrl}/ShoppingCart/product`, {
+      method: 'DELETE',
+      headers,
+      body: JSON.stringify({ ProductId, UserGuid }),
+    });
+    if (!response.ok) throw new Error();
+
+    const result = await response.json();
+
+    return result.name;
+  } catch {
+    throw new Error();
+  }
+}
+
+export async function quantityInc(ProductId: number, UserGuid: string | null): Promise<string> {
+  try {
+    const response = await fetch(`${baseUrl}/ShoppingCart/quantityinc`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ProductId, UserGuid }),
+    });
+    if (response.status !== 200) throw new Error();
+
+    const result = await response.json();
+
+    return result.Name;
+  } catch {
+    throw new Error();
+  }
+}
+
+export async function quantityDec(ProductId: number, UserGuid: string | null): Promise<string> {
+  try {
+    const response = await fetch(`${baseUrl}/ShoppingCart/quantitydec`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ProductId, UserGuid }),
+    });
+    if (response.status !== 200) throw new Error();
+
+    const result = await response.json();
+
+    return result.Name;
+  } catch {
+    throw new Error();
+  }
+}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { createBusket, getHeader } from '../../api/HawkingBrosApi';
 
-import UsedGuid from '../../context/Usedguid';
+import UserGuid from '../../context/Userguid';
 
 import Layout from '../../pages/layout/Layout';
 import Main from '../../pages/main/Main';
@@ -18,7 +18,7 @@ import { paths } from '../../paths';
 import './App.css';
 
 const App: React.FC = () => {
-  const [usedGuid, setUsedGuid] = useState<null | string>(null);
+  const [userGuid, setUserGuid] = useState<null | string>(null);
   const [userName, setUserName] = useState<string>('');
 
   const productCount = faker.number.int({ min: 1, max: 10 });
@@ -28,7 +28,7 @@ const App: React.FC = () => {
       .then(() => {
         getHeader()
           .then((data) => {
-            setUsedGuid(data.UsedGuid);
+            setUserGuid(data.UsedGuid);
             setUserName(data.UserName);
           })
           .catch(() => {
@@ -41,7 +41,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <UsedGuid.Provider value={usedGuid}>
+    <UserGuid.Provider value={userGuid}>
       <Routes>
         <Route path={paths.Root} element={<Layout headerTitle={userName} />}>
           <Route index element={<Main />} />
@@ -51,7 +51,7 @@ const App: React.FC = () => {
           <Route path={paths.busket} element={<Busket />} />
         </Route>
       </Routes>
-    </UsedGuid.Provider>
+    </UserGuid.Provider>
   );
 };
 
