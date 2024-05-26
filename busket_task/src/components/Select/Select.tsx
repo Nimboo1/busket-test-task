@@ -3,6 +3,7 @@ import { Select } from 'antd';
 const SelectComponent: React.FC = () => {
   return (
     <Select
+      size='large'
       defaultValue='option1'
       style={{ width: 120 }}
       options={[

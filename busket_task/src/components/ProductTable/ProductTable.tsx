@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { Col, Row, Button } from 'antd';
 import { DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 
 import UserGuid from '../../context/Userguid';
-import { getProducts, getSummary, clearBusket } from '../../api/HawkingBrosApi';
 
 import type { IProduct } from '../../interfaces/Interfaces';
 
@@ -28,9 +27,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
     <>
       {products.map((el) => {
         return (
-          <Row key={el.Id}>
+          <Row key={el.Id} className={styles.row}>
             <Col flex='auto'>{el.Name}</Col>
-            <Col span={4}>
+            <Col span={4} className={styles.col}>
               <Button
                 size={'small'}
                 shape='circle'

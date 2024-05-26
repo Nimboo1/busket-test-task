@@ -1,4 +1,4 @@
-import { IHeader, IProduct } from '../interfaces/Interfaces';
+import type { IHeader, IProduct } from '../interfaces/Interfaces';
 
 const baseUrl = 'http://localhost:8080/api';
 const headers = {
